@@ -16,9 +16,12 @@ sources = [
 script = raw"""
 cd $WORKSPACE/srcdir/GLMNet.jl/deps/
 
+libdir=$prefix/lib
 flags="-fdefault-real-8 -ffixed-form -shared -O3"
+
 if [[ ${target} != *mingw* ]]; then
      flags="${flags} -fPIC"
+     libdir=$prefix/bin
 fi
 if [[ ${target} != aarch64* ]] && [[ ${target} != arm* ]]; then
      flags="${flags} -m${nbits}"
@@ -26,7 +29,8 @@ fi
 
 ${FC} ${LDFLAGS} ${flags} glmnet5.f90 -o libglmnet.${dlext}
 
-mv libglmnet.${dlext} $prefix/
+mkdir -p $libdir
+mv libglmnet.${dlext} $libdir/
 
 """
 
